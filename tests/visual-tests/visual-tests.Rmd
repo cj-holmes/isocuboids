@@ -1,0 +1,114 @@
+---
+title: "Visual tests"
+output: html_document
+date: "2022-07-30"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+I'm not sure how to do visual tests - other than plot images and look at them.
+
+I guess I could create known control reference images and then test to see if the images produced from the packages match (either exactly at the raster level or as a fuzzy image similarity type of thing...)
+
+```{r}
+library(isocuboids)
+library(tidyverse)
+library(magick)
+```
+
+# Image
+```{r}
+i <- image_read(matrix(viridis::plasma(30)))
+```
+
+## 0-20
+```{r}
+ft <- c(0,20)
+cuboid_image(
+    i, 
+    res = NULL,
+    height_scale = ft,
+    a1 = 90, a2 = 0,
+    orientation = 1, 
+    show_axes = F) + 
+    geom_hline(yintercept = ft, col = "black")
+```
+
+## 10-20
+```{r}
+ft <- c(10,20)
+cuboid_image(
+    i, 
+    res = NULL,
+    height_scale = ft,
+    a1 = 90, a2 = 0,
+    orientation = 1, 
+    show_axes = F) + 
+    geom_hline(yintercept = ft, col = "black")
+```
+
+## 20-10
+```{r}
+ft <- c(20,10)
+cuboid_image(
+    i, 
+    res = NULL,
+    height_scale = ft,
+    a1 = 90, a2 = 0,
+    orientation = 1, 
+    show_axes = F) + 
+    geom_hline(yintercept = ft, col = "black")
+```
+
+
+# Matrix
+```{r}
+m <- matrix(1:10)
+```
+
+## 0-20
+```{r}
+ft <- c(0,20)
+ms <- m |> scales::rescale(ft)
+cuboid_matrix(
+    ms, 
+    a1 = 90, a2 = 0, 
+    orientation = 1, 
+    show_axes = F) + 
+    geom_hline(yintercept = ft, col = "orange")
+```
+
+## 20-40
+```{r}
+ft <- c(20,40)
+ms <- m |> scales::rescale(ft)
+cuboid_matrix(
+    ms, 
+    a1 = 90, a2 = 0, 
+    orientation = 1, 
+    show_axes = F) + 
+    geom_hline(yintercept = ft, col = "orange")
+```
+
+## 40-20
+```{r}
+ft <- c(40,20)
+ms <- m |> scales::rescale(ft)
+cuboid_matrix(
+    ms, 
+    a1 = 90, a2 = 0, 
+    orientation = 1, 
+    show_axes = F) + 
+    geom_hline(yintercept = ft, col = "orange")
+```
+
+# Orientation
+```{r fig.show='hold', out.width="50%"}
+m <- volcano |> scales::rescale(c(1, 30))
+
+map(1:4, ~cuboid_matrix(m, orientation = .x))
+map(1:4, ~cuboid_image('https://i.pinimg.com/564x/e6/ae/91/e6ae9168d971528909de24cc9080b126.jpg', orientation = .x))
+```
+

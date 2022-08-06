@@ -1,0 +1,27 @@
+Package: isocuboids
+Title: Production Of Pseudo 3-D Isometric Height Maps
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Chris",
+           family = "Holmes",
+           role = c("aut", "cre"),
+           email = "c.holmes4@gmail.com")
+Description: A package for transforming images/pictures or matrices into pseudo 3D isometric height maps.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+Imports: 
+    dplyr,
+    ggplot2,
+    lifecycle,
+    magick,
+    scales,
+    tibble,
+    tidyr
+Depends: 
+    R (>= 2.10)
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
