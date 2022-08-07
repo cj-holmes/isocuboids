@@ -61,6 +61,9 @@ cuboid_matrix(
 
 Convert a numeric matrix into cuboids that are raised from the ground plane and view as isometric projection (by default)
 }
+\details{
+Shading of the cuboid faces is done naively - it's a simple reduction in brightness, so there is no clever physics going on here!
+}
 \examples{
 cuboid_matrix(matrix(runif(100), nrow = 10), cuboid_col = 1)
 

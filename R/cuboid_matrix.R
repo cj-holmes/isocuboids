@@ -5,6 +5,9 @@
 #'
 #' Convert a numeric matrix into cuboids that are raised from the ground plane and view as isometric projection (by default)
 #'
+#' @details
+#' Shading of the cuboid faces is done naively - it's a simple reduction in brightness, so there is no clever physics going on here!
+#'
 #' @param mat a matrix
 #' @param cuboid_fill a vector of colours to be mapped to cuboid height (for images this defaults to the original pixel colour)
 #' @param cuboid_col a colour for the cuboid stroke outline

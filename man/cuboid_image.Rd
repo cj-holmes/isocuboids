@@ -81,6 +81,7 @@ Convert image pixels into cuboids that are raised from the ground plane and view
 }
 \details{
 By default cuboids are raised in proportion to pixel brightness on a scale between 1 and 10.
+Shading of the cuboid faces is also done naively - it's a simple reduction in brightness, so there is no clever physics going on here!
 Some further reading on the Mitchell-Netravali resize filter https://www.cs.utexas.edu/~fussell/courses/cs384g-fall2013/lectures/mitchell/Mitchell.pdf and here https://legacy.imagemagick.org/Usage/filter/#mitchell
 }
 \examples{
