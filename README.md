@@ -460,7 +460,7 @@ exact, I used trial and error to get the correct spacing for the stairs
 to line up!
 
 ``` r
-d <- seq(3, by=0.214, l=14)
+d <- seq(2, by=0.214, l=14)
 
 m <-
     matrix(

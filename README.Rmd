@@ -378,7 +378,7 @@ expand_grid(x=1:s, y=1:s) |>
 ## Penrose stairs
 An approximation of the [Penrose stairs](https://en.wikipedia.org/wiki/Penrose_stairs). This is not exact, I used trial and error to get the correct spacing for the stairs to line up!
 ```{r out.width="75%"}
-d <- seq(3, by=0.214, l=14)
+d <- seq(2, by=0.214, l=14)
 
 m <-
     matrix(
