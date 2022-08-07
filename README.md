@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# isocuboids <img src="data-raw/hex-logo.png" align="right" height="139"/>
+# isocuboids <img src="man/hex-logo.png" align="right" height="139"/>
 
 <!-- badges: start -->
 
@@ -451,3 +451,32 @@ expand_grid(x=1:s, y=1:s) |>
 ```
 
 <img src="man/figures/README-unnamed-chunk-21-1.png" width="75%" />
+
+## Penrose stairs
+
+An approximation of the [Penrose
+stairs](https://en.wikipedia.org/wiki/Penrose_stairs). This is not
+exact, I used trial and error to get the correct spacing for the stairs
+to line up!
+
+``` r
+d <- seq(3, by=0.214, l=14)
+
+m <-
+    matrix(
+        c(rev(d[1:6]),
+          d[7], 0, 0, 0, 0, 0,
+          d[8], 0, 0, 0, 0, 0,
+          d[9], 0, 0, 0, 0, 0,
+          d[10], 0, d[14], 0, 0, 0,
+          d[11:13], 0, 0, 0), ncol = 6, byrow = T)
+
+cuboid_matrix(m, cuboid_col = 1, show_axes = F, return_data = T) |>
+    filter(!(x > 2 & z < 5)) |>
+    ggplot()+
+    geom_polygon(aes(px, py, group = plot_group, fill=face), col = 1)+
+    coord_equal()+
+    theme(legend.position = "")
+```
+
+<img src="man/figures/README-unnamed-chunk-22-1.png" width="75%" />
