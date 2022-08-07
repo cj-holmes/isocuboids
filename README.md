@@ -32,6 +32,8 @@ following in mind…
     article
 -   This package is written purely in R (there is no C++ code) so it is
     slow to run for large numbers of cuboids
+    -   Anything above a few hundred cuboids square becomes slow to
+        render
 -   I don’t know what I’m doing!
 
 ### Overview
@@ -300,6 +302,114 @@ image_read(i) |>
 
 <img src="man/figures/README-unnamed-chunk-16-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-16-2.png" width="50%" />
 
+## Scan through an image
+
+Scan through an image creating cross sectional plots
+
+``` r
+# Set aesthetics for visualisation
+res <- 60
+from <- 1 # height scale min
+to <- 10 # height scale max
+
+img <-
+    image_read('https://tatianamowry.files.wordpress.com/2018/06/skull-dm.png') |> 
+    image_resize(paste0(res, "x", res, "^")) |> 
+    image_crop(paste0(res, "x", res), gravity = "center")
+
+# Overall isometric angles plot
+df1 <- 
+    cuboid_image(
+        img,
+        res = NULL,
+        height_scale = c(from, to),
+        return_data = TRUE)
+
+# Cross section 1
+df2 <- 
+    cuboid_image(
+        img,
+        res = NULL,
+        height_scale = c(from, to),
+        return_data = TRUE,
+        a1 = 0, 
+        a2 = 0,
+        shading = c(0,0,0))
+
+# Cross section 2
+df3 <- 
+    cuboid_image(
+        img,
+        res = NULL,
+        height_scale = c(from, to),
+        return_data = TRUE,
+        a1 = 90, 
+        a2 = 0, 
+        shading = c(0,0,0))
+
+for(i in df1$z |> unique() |> sort()){
+
+    # Isometric plot
+    p1 <-
+        df1 |> 
+        mutate(col_adjusted = case_when(
+            z == i & x == i & face == "top" ~ "purple",
+            z == i & x == i & face == "left" ~ "purple3",
+            z == i & x == i & face == "right" ~ "purple4",
+            z == i & face == "top" ~ "red",
+            z == i & face == "left" ~ "red3",
+            z == i & face == "right" ~ "red4",
+            x == i & face == "top" ~ "blue",
+            x == i & face == "left" ~ "blue3",
+            x == i & face == "right" ~ "blue4",
+            TRUE ~ col_adjusted)) |> 
+        ggplot() +
+        geom_polygon(aes(px, py, fill = I(col_adjusted), group = plot_group))+
+        coord_equal()+
+        theme(axis.title = element_blank())
+    
+    # Cross section 1
+    p2 <-
+        df2 |> 
+        filter(z == i) |> 
+        ggplot() +
+        geom_polygon(aes(px, py, fill = I(col_adjusted), group = plot_group))+
+        coord_equal(ylim = c(from, to))+
+        theme(panel.border = element_rect(colour = "red", fill = NA, size = 1),
+              axis.title = element_blank())
+    
+    # Cross section 2
+    p3 <-
+        df3 |> 
+        filter(x == i) |> 
+        ggplot() +
+        geom_polygon(aes(px, py, fill = I(col_adjusted), group = plot_group))+
+        coord_equal(ylim = c(from, to))+
+        theme(panel.border = element_rect(colour = "blue", fill = NA, size = 1),
+              axis.title = element_blank())
+    
+    # Output
+    p4 <- patchwork::wrap_plots(p1, p2, p3, ncol =1)
+    ggsave(paste0("data-raw/animation/",i,".jpg"), width = 6, height = 6, bg = "white")
+}
+
+# Read image files in correct order!
+s <-
+    tibble(f = list.files('data-raw/animation/', pattern = '.jpg', full.names = T)) |> 
+    mutate(n = str_extract(f, "[0-9]+(?=\\.jpg)") |> as.integer()) |> 
+    arrange(n) |> 
+    pull(f) |> 
+    image_read()
+
+# Make smaller
+s_small <- image_resize(s, "600x")
+
+# Save animated gif
+image_write_gif(s_small, 'data-raw/animation/anim.gif', delay = 0.15)
+```
+
+<img src="man/figures/README-unnamed-chunk-18-1.gif" width="75%" />
+
 # Matrices
 
 For matrices, the matrix is not resized and the height of the cuboids is
@@ -312,7 +422,7 @@ cuboid_matrix(matrix(1:5), show_height_plane = TRUE, orientation = 4)
 cuboid_matrix(matrix(seq(0,2,l=25), nrow=5), show_height_plane = TRUE, cuboid_col = 1)
 ```
 
-<img src="man/figures/README-unnamed-chunk-17-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-17-2.png" width="50%" /><img src="man/figures/README-unnamed-chunk-17-3.png" width="50%" /><img src="man/figures/README-unnamed-chunk-17-4.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-19-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-19-2.png" width="50%" /><img src="man/figures/README-unnamed-chunk-19-3.png" width="50%" /><img src="man/figures/README-unnamed-chunk-19-4.png" width="50%" />
 
 Some examples with the `volcano` data
 
@@ -321,4 +431,23 @@ cuboid_matrix(volcano |> scales::rescale(c(0,20)))
 cuboid_matrix(volcano |> scales::rescale(c(20,0)))
 ```
 
-<img src="man/figures/README-unnamed-chunk-18-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-18-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-20-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-20-2.png" width="50%" />
+
+## Generate terrain
+
+Generate fake terrain using `{ambient}` noise. Shamelessly stolen from
+[coolbutuseless](https://coolbutuseless.github.io/2022/07/01/isocubes-v0.1.2-update-with-signed-distance-fields/)
+
+``` r
+s <- 50
+set.seed(s)
+
+expand_grid(x=1:s, y=1:s) |>
+    mutate(n = ambient::gen_perlin(x, y, frequency = 0.06)) |>
+    pull(n) |> 
+    cut(5, labels=FALSE) |>
+    matrix(ncol = s) |> 
+    cuboid_matrix(cuboid_fill = topo.colors(20))
+```
+
+<img src="man/figures/README-unnamed-chunk-21-1.png" width="75%" />
