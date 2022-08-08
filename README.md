@@ -68,8 +68,8 @@ image_read(i)
 ## Defaults
 
 By default, images are resized to be 60 cuboids wide `res = 60` and
-rendered at isometric projection angles. Cuboid heights are mapped to
-the brightness value of their corresponding pixel and scaled to range
+rendered as an isometric view. Cuboid heights are mapped to the
+brightness value of their corresponding pixel and scaled to range
 between 1 and 10 units high
 
 ``` r
@@ -238,8 +238,7 @@ Various functions of the x and z coordinates
 cuboid_image(i2, 
              height_map = sin(scales::rescale(x,c(0,4*pi))), 
              crop_square = FALSE,
-             height_scale = c(1, 10)
-)
+             height_scale = c(1, 10))
 
 cuboid_image(i2, 
              height_map = z^3,

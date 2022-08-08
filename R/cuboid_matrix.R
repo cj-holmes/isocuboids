@@ -3,17 +3,18 @@
 #' @description
 #' `r lifecycle::badge('experimental')`
 #'
-#' Convert a numeric matrix into cuboids that are raised from the ground plane and view as isometric projection (by default)
+#' Convert a numeric matrix into cuboids that are raised from the ground plane and viewed isometrically (by default)
 #'
 #' @details
 #' Shading of the cuboid faces is done naively - it's a simple reduction in brightness, so there is no clever physics going on here!
+#' If angles a1 and a2 are changed from their default values, the view will no longer by isometric.
 #'
 #' @param mat a matrix
 #' @param cuboid_fill a vector of colours to be mapped to cuboid height (for images this defaults to the original pixel colour)
 #' @param cuboid_col a colour for the cuboid stroke outline
 #' @param orientation orientation of the output (1, 2, 3 or 4) (default = 1)
-#' @param a1 angle of rotation around the vertical axis in degrees (default = 45)
-#' @param a2 angle of rotation around the horizontal axis in degrees (default = asin(tan(pi/6))*(180/pi) ~35.264)
+#' @param a1 angle of rotation around the vertical axis in degrees (default = 45) (default a1 and a2 give isometric view)
+#' @param a2 angle of rotation around the horizontal axis in degrees (default = asin(tan(pi/6))*(180/pi) ~35.264) (default a1 and a2 give isometric view)
 #' @param shading a vector of 3 numbers between 0 and 1. The amount of shading applied to each cuboid face. Order is top, left, right. (Default = c(0, 0.25, 0.5))
 #' @param return_data return dataframe instead of image (default = FALSE)
 #' @param show_axes show axes on the output image? (default = TRUE)

@@ -32,9 +32,9 @@ cuboid_matrix(
 
 \item{orientation}{orientation of the output (1, 2, 3 or 4) (default = 1)}
 
-\item{a1}{angle of rotation around the vertical axis in degrees (default = 45)}
+\item{a1}{angle of rotation around the vertical axis in degrees (default = 45) (default a1 and a2 give isometric view)}
 
-\item{a2}{angle of rotation around the horizontal axis in degrees (default = asin(tan(pi/6))*(180/pi) ~35.264)}
+\item{a2}{angle of rotation around the horizontal axis in degrees (default = asin(tan(pi/6))*(180/pi) ~35.264) (default a1 and a2 give isometric view)}
 
 \item{shading}{a vector of 3 numbers between 0 and 1. The amount of shading applied to each cuboid face. Order is top, left, right. (Default = c(0, 0.25, 0.5))}
 
@@ -59,10 +59,11 @@ cuboid_matrix(
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-Convert a numeric matrix into cuboids that are raised from the ground plane and view as isometric projection (by default)
+Convert a numeric matrix into cuboids that are raised from the ground plane and viewed isometrically (by default)
 }
 \details{
 Shading of the cuboid faces is done naively - it's a simple reduction in brightness, so there is no clever physics going on here!
+If angles a1 and a2 are changed from their default values, the view will no longer by isometric.
 }
 \examples{
 cuboid_matrix(matrix(runif(100), nrow = 10), cuboid_col = 1)

@@ -50,9 +50,9 @@ cuboid_image(
 
 \item{crop_gravity}{gravity of square crop if \code{crop_square = TRUE} (value from \code{magick::gravity_types()})}
 
-\item{a1}{angle of rotation around the vertical axis in degrees (default = 45)}
+\item{a1}{angle of rotation around the vertical axis in degrees (default = 45) (default a1 and a2 give isometric view)}
 
-\item{a2}{angle of rotation around the horizontal axis in degrees (default = asin(tan(pi/6))*(180/pi) ~35.264)}
+\item{a2}{angle of rotation around the horizontal axis in degrees (default = asin(tan(pi/6))*(180/pi) ~35.264) (default a1 and a2 give isometric view)}
 
 \item{shading}{a vector of 3 numbers between 0 and 1. The amount of shading applied to each cuboid face. Order is top, left, right. (Default = c(0, 0.25, 0.5))}
 
@@ -77,10 +77,11 @@ cuboid_image(
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-Convert image pixels into cuboids that are raised from the ground plane and view as isometric projection (by default)
+Convert image pixels into cuboids that are raised from the ground plane and viewed isometrically (by default)
 }
 \details{
 By default cuboids are raised in proportion to pixel brightness on a scale between 1 and 10.
+If angles a1 and a2 are changed from their default values, the view will no longer by isometric.
 Shading of the cuboid faces is also done naively - it's a simple reduction in brightness, so there is no clever physics going on here!
 Some further reading on the Mitchell-Netravali resize filter https://www.cs.utexas.edu/~fussell/courses/cs384g-fall2013/lectures/mitchell/Mitchell.pdf and here https://legacy.imagemagick.org/Usage/filter/#mitchell
 }
