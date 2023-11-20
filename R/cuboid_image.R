@@ -66,7 +66,9 @@ cuboid_image <-
         verbose = FALSE){
 
         # Check that the image is magick or a character string
-        if(!(class(img) %in% c("magick-image", "character"))) stop("img must be a a {magick} image or character path to an image file")
+        if(!inherits(img, "magick-image") && !inherits(img, "character")) {
+          stop("img must be a a {magick} image or character path to an image file")
+        }
         if(!(a1 >= 0 & a1 <= 90 & a2 >= 0 & a2 <= 90)) stop("Both angles a1 and a2 must be between 0 and 90")
         if(!(is.null(height_scale) | all(height_scale >= 0))) stop("Both height scale values must be greater than or equal to 0")
         if(!all(c(shading >= 0, shading <= 1))) stop("All shading values must be between 0 and 1")
@@ -75,7 +77,7 @@ cuboid_image <-
         if(verbose) message("Resizing, rotating and processing image")
 
         # If img is already a magick image, leave it as is - otherwise read it in
-        if(class(img) == "magick-image"){i <- img} else {i <- magick::image_read(img)}
+        if(inherits(img, "magick-image")){i <- img} else {i <- magick::image_read(img)}
 
         # Store original image width and height
         original_image_info <- magick::image_info(i)
